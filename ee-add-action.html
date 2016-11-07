@@ -1,0 +1,262 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-spinner/paper-spinner.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="../ee-shared-styles/shared-styles.html">
+
+<!--
+A comment describing this element
+
+Example:
+
+    <my-elem></my-elem>
+
+Example:
+
+    <my-elem>
+      <h2>Hello my-elem</h2>
+    </my-elem>
+
+@demo demo/index.html
+-->
+
+<dom-module id="ee-add-action">
+  <template>
+    <style is="custom-style" include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      #icon {
+        padding: 8px;
+        border: 1px var(--primary-color, blue) dashed;
+        margin-right: 12px;
+        @apply(--action-add-action-icon);
+      }
+
+      .action-container {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .btn-container {
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-direction: row;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+      }
+
+      #actionBtn {
+        width: 60px;
+        margin-right: 6px;
+        background: var(--default-action-color, #365899);
+        color: #fff;
+        @apply(--action-add-action-btn);
+      }
+
+      #cancelBtn {
+        width: 40px;
+        margin-right: 6px;
+        @apply(--action-add-cancel-btn);
+      }
+
+      .input {
+        max-width: 400px;
+        @apply(--action-add-input);
+      }
+
+      #spinner {
+        width: 16px;
+        height: 16px;
+        margin-right: 6px;
+        @apply(--action-add-spinner);
+      }
+    </style>
+
+    <template is="dom-if" if="[[!inputActive]]">
+      <div class="action-container" on-tap="_actionTapped">
+        <iron-icon id="icon" icon="[[icon]]"></iron-icon>
+        <span>[[title]]</span>
+        <paper-ripple></paper-ripple>
+      </div>
+    </template>
+
+    <template is="dom-if" if="[[inputActive]]">
+      <div>
+        <template is="dom-if" if="[[!hasChoices]]">
+          <paper-input id="input" class="input" placeholder="[[placeholder]]" disabled="[[busy]]" label="[[inputLabel]]" value="{{value::change}}"></paper-input>
+          <template is="dom-if" if="[[two]]">
+            <paper-input id="inputTwo" class="input" disabled="[[busy]]" label="[[inputLabelTwo]]" value="{{valueTwo::change}}"></paper-input>
+          </template>
+        </template>
+        <template is="dom-if" if="[[hasChoices]]">
+          <vaadin-combo-box
+            label="[[inputLabel]]"
+            items="[[choices]]"
+            item-value-path="[[choicesValuePath]]"
+            item-label-path="[[choicesLabelPath]]"
+            selected-item="{{objectValue}}"
+            value="{{value}}">
+          </vaadin-combo-box>
+        </template>
+      </div>
+      <div class="btn-container">
+        <paper-button id="actionBtn" disabled="[[busy]]" on-tap="_saveTapped" raised>[[actionTitle]]</paper-button>
+        <paper-button id="cancelBtn" disabled="[[busy]]" on-tap="_cancelTapped">[[cancelTitle]]</paper-button>
+        <paper-spinner id="spinner" active="[[busy]]"></paper-spinner>
+      </div>
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'ee-add-action',
+
+      properties: {
+
+        inputActive: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        two: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        actionTitle: {
+          type: String,
+          value: 'Save'
+        },
+
+        cancelTitle: {
+          type: String,
+          value: 'Cancel'
+        },
+
+        title: {
+          type: String,
+          value: ''
+        },
+
+        placeholder: {
+          type: String,
+          value: ''
+        },
+
+        inputLabel: {
+          type: String,
+          value: ''
+        },
+
+        value: {
+          type: String,
+          value: '',
+          notify: true
+        },
+
+        inputLabelTow: {
+          type: String,
+          value: ''
+        },
+
+        valueTow: {
+          type: String,
+          value: '',
+          notify: true
+        },
+
+        icon: {
+          type: String,
+          value: 'icons:add'
+        },
+
+        busy: {
+          type: Boolean,
+          value: false
+        },
+
+        noAutoReturnWhenSaved: {
+          type: Boolean,
+          value: false
+        },
+
+        choices: {
+          type: Array,
+          value() { return [] },
+          notify: true
+        },
+
+        choicesValuePath: {
+          type: String,
+          value: '',
+          notify: true
+        },
+
+        choicesLabelPath: {
+          type: String,
+          value: '',
+          notify: true
+        },
+
+        hasChoices: {
+          type: Boolean,
+          value: false,
+          computed: '_hasChoices(choices)'
+        },
+
+        objectValue: {
+          type: Object,
+          value() { return {} },
+          notify: true
+        },
+
+
+      },
+
+      _hasChoices(choices) {
+        return choices && choices.length > 0
+      },
+
+      _toggleViews: function() {
+        this.inputActive = !this.inputActive;
+        this.fire('view-changed', this.inputActive);
+      },
+
+      _actionTapped: function() {
+        this._toggleViews();
+      },
+
+      _saveTapped: function() {
+        this.fire('save', this.value);
+        this.fire('save-object', this.objectValue);
+        this.fire('add', {'one': this.value, 'two': this.valueTwo});
+        this.busy = true;
+
+        if (!this.noAutoReturnWhenSaved) {
+          this.saved();
+        }
+      },
+
+      saved: function() {
+        this.inputActive = false;
+        this.busy = false;
+        this.value = '';
+      },
+
+      _cancelTapped: function() {
+        this.fire('cancel', this.value);
+        this.async(function() {
+          this._toggleViews();
+        }.bind(this), 100);
+      },
+    });
+  </script>
+</dom-module>

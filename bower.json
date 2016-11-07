@@ -1,0 +1,19 @@
+{
+  "name": "ee-action-item",
+  "description": "",
+  "main": "ee-action-item.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "paper-elements": "^1.0.7",
+    "iron-elements": "^1.0.10",
+    "ee-helper-behavior": "git+https://github.com/ElfyCares/ee-helper-behavior",
+    "ee-shared-styles": "git+https://github.com/ElfyCares/ee-shared-styles",
+    "vaadin-combo-box": "^1.1.5"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}
