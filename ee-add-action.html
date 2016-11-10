@@ -43,15 +43,6 @@ Example:
         cursor: pointer;
       }
 
-      .btn-container {
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -ms-flex-direction: row;
-        -webkit-flex-direction: row;
-        flex-direction: row;
-      }
-
       #actionBtn {
         width: 60px;
         margin-right: 6px;
@@ -61,8 +52,6 @@ Example:
       }
 
       #cancelBtn {
-        width: 40px;
-        margin-right: 6px;
         @apply(--action-add-cancel-btn);
       }
 
@@ -106,9 +95,9 @@ Example:
           </vaadin-combo-box>
         </template>
       </div>
-      <div class="btn-container">
+      <div class="h-c">
         <paper-button id="actionBtn" disabled="[[busy]]" on-tap="_saveTapped" raised>[[actionTitle]]</paper-button>
-        <paper-button id="cancelBtn" disabled="[[busy]]" on-tap="_cancelTapped">[[cancelTitle]]</paper-button>
+        <a class="a-btn" id="cancelBtn" disabled="[[busy]]" on-tap="_cancelTapped">[[cancelTitle]]</a>
         <paper-spinner id="spinner" active="[[busy]]"></paper-spinner>
       </div>
     </template>

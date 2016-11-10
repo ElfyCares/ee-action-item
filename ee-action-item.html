@@ -29,7 +29,7 @@ Example:
       }
       #icon {
         top: -0.8em;
-        opacity: 0.1;
+        opacity: 0.3;
         width: 30px;
         height: 30px;
         @apply(--ee-action-item-icon);
@@ -40,10 +40,19 @@ Example:
         @apply(--ee-action-item-icon-hover);
       }
     </style>
-    <div class="h">
-      <content></content>
-      <paper-icon-button id="icon" icon="[[icon]]" on-tap="_tapped"></paper-icon-button>
-    </div>  
+    <div class="h-c">
+      <template is="dom-if" if="[[asLi]]">
+        <li>
+          <content></content>
+          <paper-icon-button id="icon" icon="[[icon]]" on-tap="_tapped"></paper-icon-button>
+        </li>
+      </template>
+      <template is="dom-if" if="[[!asLi]]">
+        <content></content>
+        <paper-icon-button id="icon" icon="[[icon]]" on-tap="_tapped"></paper-icon-button>
+      </template>
+
+    </div>
   </template>
 
   <script>
@@ -54,6 +63,11 @@ Example:
         icon: {
           type: String,
           value: 'icons:close'
+        },
+
+        asLi: {
+          type: Boolean,
+          value: false,
         },
       },
 
