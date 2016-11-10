@@ -39,8 +39,12 @@ Example:
         opacity: 1;
         @apply(--ee-action-item-icon-hover);
       }
+
+      .container {
+        white-space: nowrap;
+      }
     </style>
-    <div class="h-c">
+    <div class="container h-c">
       <template is="dom-if" if="[[asLi]]">
         <li>
           <content></content>
@@ -51,7 +55,6 @@ Example:
         <content></content>
         <paper-icon-button id="icon" icon="[[icon]]" on-tap="_tapped"></paper-icon-button>
       </template>
-
     </div>
   </template>
 
